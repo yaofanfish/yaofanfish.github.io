@@ -1,1 +1,0 @@
-import{n as e,p as t,u as n,x as r}from"./index-CV4JvG29.js";var i={},a={class:`about`};function o(e,i){return r(),t(`div`,a,[...i[0]||=[n(`h1`,null,`This is an about page`,-1)]])}var s=e(i,[[`render`,o]]);export{s as default};
