@@ -24,20 +24,15 @@ function loadInit() {
 }
 
 async function log(msg) {
-    let r = await sb.from("logs").insert([{data: msg}]);
+    let r = await sbe4c5.from("logs").insert([{data: msg}]);
     return r;
 }
 
 (async () => {
     try {
-        console.log(1);
         await loadInit();
-        console.log(2);
         globalThis.r = await log(logmsg);
-        console.log(3);
     } catch (ede4e61f) {
-        console.log(-1);
     }
 })();
 
-console.log(0);
