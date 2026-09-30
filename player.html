@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Music</title>
+        <link href="assets/css/style.css" rel="stylesheet">
+    </head>
+<body>
+
+<nav>
+    <a href="/">Home</a><br>
+    <a href="/player.html">Music</a><br>
+    <a href="/login.html">Log in</a>
+</nav>
+
+<h1>Music</h1>
+
+<audio id="player" controls preload="metadata"></audio>
+<br>
+<label><input type="checkbox" id="loop"> Loop current song</label>
+<br>
+<label><input type="checkbox" id="next"> Play next song when one ends</label>
+
+<ul id="playlist"></ul>
+
+<script>
+    const songs = [
+        { title: 'Gigue', file: 'assets/music/gigue.m4a' },
+    ];
+
+    const player = document.getElementById('player');
+    const playlist = document.getElementById('playlist');
+    const loopBox = document.getElementById('loop');
+    const nextBox = document.getElementById('next');
+    let current = 0;
+
+    function load(i, autoplay = true) {
+        current = i;
+        player.src = songs[i].file;
+        if (autoplay) player.play();
+        [...playlist.children].forEach((li, j) => {
+            li.style.fontWeight = j === i ? 'bold' : 'normal';
+        });
+    }
+
+    songs.forEach((song, i) => {
+        const li = document.createElement('li');
+        li.textContent = song.title;
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => load(i));
+        playlist.append(li);
+    });
+
+    // Both options are off by default: a song plays once and stops.
+    loopBox.addEventListener('change', () => {
+        player.loop = loopBox.checked;
+    });
+
+    // Only fires when a song finishes (never while looping).
+    player.addEventListener('ended', () => {
+        if (nextBox.checked && current + 1 < songs.length) load(current + 1);
+    });
+
+    load(0, false);
+</script>
+
+</body>
+</html>

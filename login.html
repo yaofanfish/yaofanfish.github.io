@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Login</title>
+	</head>
+<body>
+
+<nav>
+<a href="/">Home</a><br>
+<a href="/login.html">Log in</a>
+<a href="/player.html">Music</a><br>
+</nav>
+
+
+<h1>Login</h1>
+
+<input type="email" id="email" placeholder="Email" autocomplete="email">
+<br>
+<input type="password" id="password" placeholder="Password" autocomplete="current-password">
+<br>
+<button id="submit">Log in</button>
+
+<p id="message"></p>
+
+<script src="/assets/js/vendor/supabase.js"></script>
+<script src="/assets/js/init.js"></script>
+
+<script>
+	const emailInput = document.getElementById('email');
+	const passwordInput = document.getElementById('password');
+	const message = document.getElementById('message');
+
+	async function login() {
+		message.textContent = 'Logging in...';
+
+		const { data, error } = await sb.auth.signInWithPassword({
+			email: emailInput.value,
+			password: passwordInput.value,
+		});
+
+		if (error) {
+			message.textContent = 'Wrong email or password.';
+			console.error(error);
+		} else {
+			message.textContent = 'Logged in as ' + data.user.email;
+		}
+	}
+
+	document.getElementById('submit').addEventListener('click', login);
+
+	// Allow pressing Enter in either field to submit
+	[emailInput, passwordInput].forEach((el) => {
+		el.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') login();
+		});
+	});
+</script>
+
+</body>
+</html>
