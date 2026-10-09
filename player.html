@@ -18,14 +18,14 @@
 
 <audio id="player" controls preload="metadata"></audio>
 <br>
-<label><input type="checkbox" id="loop"> Loop current song</label>
+<label><input type="checkbox" id="loop"> Loop current piece</label>
 <br>
-<label><input type="checkbox" id="next"> Play next song when one ends</label>
+<label><input type="checkbox" id="next"> Play next piece when one ends</label>
 
 <ul id="playlist"></ul>
 
 <script>
-    const songs = [
+    const pieces = [
         { title: 'Gigue', file: 'assets/music/gigue.m4a' },
     ];
 
@@ -37,29 +37,29 @@
 
     function load(i, autoplay = true) {
         current = i;
-        player.src = songs[i].file;
+        player.src = pieces[i].file;
         if (autoplay) player.play();
         [...playlist.children].forEach((li, j) => {
             li.style.fontWeight = j === i ? 'bold' : 'normal';
         });
     }
 
-    songs.forEach((song, i) => {
+    pieces.forEach((piece, i) => {
         const li = document.createElement('li');
-        li.textContent = song.title;
+        li.textContent = piece.title;
         li.style.cursor = 'pointer';
         li.addEventListener('click', () => load(i));
         playlist.append(li);
     });
 
-    // Both options are off by default: a song plays once and stops.
+    // Both options are off by default: a piece plays once and stops.
     loopBox.addEventListener('change', () => {
         player.loop = loopBox.checked;
     });
 
-    // Only fires when a song finishes (never while looping).
+    // Only fires when a piece finishes (never while looping).
     player.addEventListener('ended', () => {
-        if (nextBox.checked && current + 1 < songs.length) load(current + 1);
+        if (nextBox.checked && current + 1 < pieces.length) load(current + 1);
     });
 
     load(0, false);

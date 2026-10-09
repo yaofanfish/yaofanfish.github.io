@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Directory listing",
+    "section": "",
+    "text": "Here’s a dir listing of all the stuffs\nIt’s all the qmd files\nindex\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIdk\n\n\nInstallation - sch\n\n\n\n\n\nOct 3, 2026\n\n\nME\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "a.html",
+    "href": "a.html",
+    "title": "Idk",
+    "section": "",
+    "text": "Homebrew install\ncd ~\ngit clone https://github.com/homebrew/brew .homebrew\nx='eval \"$(~/.homebrew/bin/brew shellenv)\"'\necho \"$x\" &gt;&gt; .zshrc\necho \"$x\" &gt;&gt; .bashrc\necho \"$x\" &gt;&gt; .bash_profile\neval \"$x\"\n\n\nidk"
+  }
+]

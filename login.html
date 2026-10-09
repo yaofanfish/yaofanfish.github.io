@@ -9,8 +9,9 @@
 
 <nav>
 <a href="/">Home</a><br>
-<a href="/login.html">Log in</a>
-<a href="/player.html">Music</a><br>
+<a href="/login.html">Log in</a><br>
+<a href="/player.html">Music</a>
+<a href="/timetable.html">timetable</a>
 </nav>
 
 
@@ -23,6 +24,8 @@
 <button id="submit">Log in</button>
 
 <p id="message"></p>
+
+<button id="logout">Log out</button>
 
 <script src="/assets/js/vendor/supabase.js"></script>
 <script src="/assets/js/init.js"></script>
@@ -56,6 +59,25 @@
 			if (e.key === 'Enter') login();
 		});
 	});
+
+	const logoutBtn = document.getElementById('logout');
+
+// When clicked, sign out and reload or update the UI
+logoutBtn.addEventListener('click', async () => {
+    await sb.auth.signOut();
+    // logoutBtn.style.display = 'none';
+    message.textContent = 'Logged out successfully.';
+});
+
+async function checkSession() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+        message.textContent = 'Already logged in as ' + session.user.email;
+    }
+}
+
+checkSession();
+
 </script>
 
 </body>

@@ -1,2 +1,14 @@
 .depr/
 
+
+/.quarto/
+**/*.quarto_ipynb
+
+./TODO.md
+private/
+local/
+.local/
+
+qmd/
+
+

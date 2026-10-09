@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link href="assets/css/style.css" rel="stylesheet">
+		<style>
+#period-message {
+  white-space: pre-line;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #999;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.today {
+  background: #f4f8ff;
+}
+
+.next-period {
+  background: #dceaff;
+}
+
+.current-period {
+  background: #9fc5ff;
+  outline: 2px solid #3978d4;
+  outline-offset: -2px;
+}
+</style>
+	</head>
+<body>
+
+<nav>
+<a href="/">Home</a><br>
+<a href="/login.html">Log in</a><br>
+<a href="/player.html">Music</a><br>
+<a href="/qmd-o">qmd</a>
+
+</nav>
+	
+<p id="period-message"></p>
+<div id="timetable"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/assets/js/vendor/supabase.js"></script>
+<script src="/assets/js/init.js"></script>
+
+<script>
+
+(async () => {
+	ttd = (await sb.from("timetables").select()).data;
+	tt = ttd?.at(-1)?.data;
+
+	if (!tt) {
+		document.getElementById("timetable").innerHTML = "Not found";
+		return;
+	}
+
+
+
+  // tt is your existing nested array, ordered Mon–Sat.
+  const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const LESSON_MINUTES = 45;
+
+  const now = new Date();
+  const todayIndex = (now.getDay() + 6) % 7; // Monday = 0; Sunday = 6
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const todayLessons = tt[todayIndex] ?? [];
+  const upcoming = todayLessons
+    .map((lesson, index) => ({
+      lesson,
+      index,
+      start: toMinutes(lesson.time)
+    }))
+    .filter(item => item.start > nowMinutes);
+
+  const current = todayLessons
+    .map((lesson, index) => ({
+      lesson,
+      index,
+      start: toMinutes(lesson.time)
+    }))
+    .find(item =>
+      nowMinutes >= item.start &&
+      nowMinutes < item.start + LESSON_MINUTES
+    );
+
+  const next = upcoming[0];
+
+  const message = document.getElementById("period-message");
+  message.textContent =
+    `Your current period: ${current ? current.index + 1 : "None "}
+Your next period: ${next ? next.index + 1 : "None"}`;
+
+  const table = document.createElement("table");
+  const headerRow = table.createTHead().insertRow();
+
+  ["Period", ...dayNames].forEach(name => {
+    const th = document.createElement("th");
+    th.textContent = name;
+    headerRow.appendChild(th);
+  });
+
+  const tbody = table.createTBody();
+  const maxPeriods = Math.max(...tt.map(day => day.length));
+
+  for (let periodIndex = 0; periodIndex < maxPeriods; periodIndex++) {
+    const row = tbody.insertRow();
+    row.insertCell().textContent = periodIndex + 1;
+
+    tt.forEach((day, dayIndex) => {
+      const cell = row.insertCell();
+      const lesson = day[periodIndex];
+
+      if (lesson) {
+        cell.textContent =
+          `${lesson.time} — ${lesson.subject} (${lesson.teacher}), ${lesson.room}`;
+      }
+
+      if (dayIndex === todayIndex) {
+        cell.classList.add("today");
+      }
+
+      if (dayIndex === todayIndex && current?.index === periodIndex) {
+        cell.classList.add("current-period");
+      } else if (dayIndex === todayIndex && next?.index === periodIndex) {
+        cell.classList.add("next-period");
+      }
+    });
+  }
+
+  document.getElementById("timetable").appendChild(table);
+
+  function toMinutes(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+
+
+})();
+
+</script>
+
+<script>
+</script>
+
+</body>
+
+</html>
+
