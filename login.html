@@ -64,16 +64,23 @@
 
 // When clicked, sign out and reload or update the UI
 logoutBtn.addEventListener('click', async () => {
-    await sb.auth.signOut();
-    // logoutBtn.style.display = 'none';
-    message.textContent = 'Logged out successfully.';
+	await sb.auth.signOut();
+	// logoutBtn.style.display = 'none';
+	message.textContent = 'Logged out successfully.';
+	try {
+		localStorage.removeItem("timetable");
+	} catch (e) { ; }
 });
 
 async function checkSession() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-        message.textContent = 'Already logged in as ' + session.user.email;
-    }
+	const { data: { session } } = await sb.auth.getSession();
+	if (session) {
+		message.textContent = 'Already logged in as ' + session.user.email;
+	} else {
+		try {
+			localStorage.removeItem("timetable");
+		} catch (e) { ; }
+	}
 }
 
 checkSession();

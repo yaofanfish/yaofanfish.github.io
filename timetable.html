@@ -74,11 +74,25 @@ td {
 <script>
 
 (async () => {
-	ttd = (await sb.from("timetables").select()).data;
-	tt = ttd?.at(-1)?.data;
+	let { data: { session } } = await sb.auth.getSession();
+	if (session) {
+
+	tt = JSON.parse(localStorage.getItem("timetable"));
+
+	if (!tt) {
+		ttd = (await sb.from("timetables").select()).data;
+		tt = ttd?.at(-1)?.data;
+		if (tt) {
+			localStorage.setItem("timetable", JSON.stringify(tt));
+		}
+	}
 
 	if (!tt) {
 		document.getElementById("timetable").innerHTML = "Not found";
+		return;
+	}	
+	} else {
+		document.getElementById("timetable").innerHTML = "Not logged in";
 		return;
 	}
 
